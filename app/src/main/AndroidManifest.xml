@@ -19,7 +19,8 @@
         <activity
             android:name=".CategoryActivity"
             android:label="@string/title_activity_category"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".CompleteProfileActivity"></activity>
     </application>
 
 </manifest>

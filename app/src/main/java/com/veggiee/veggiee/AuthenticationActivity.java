@@ -58,8 +58,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                Intent categoryIntent=new Intent(AuthenticationActivity.this,CategoryActivity.class);
-                startActivity(categoryIntent);
+                Intent completeProfileIntent=new Intent(AuthenticationActivity.this,CompleteProfileActivity.class);
+                startActivity(completeProfileIntent);
                 finish();
             }
         }

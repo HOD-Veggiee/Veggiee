@@ -1,5 +1,6 @@
 package com.veggiee.veggiee;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,8 +32,6 @@ import com.squareup.picasso.Picasso;
 import com.veggiee.veggiee.Common.Common;
 import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.Model.Category;
-import com.veggiee.veggiee.Model.User;
-import com.veggiee.veggiee.ViewHolder.ViewHolder_CategoryItem;
 
 
 public class CategoryActivity extends AppCompatActivity
@@ -74,6 +74,8 @@ public class CategoryActivity extends AppCompatActivity
 
         loadCategoriesData();
 
+        adapter.notifyDataSetChanged();
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewCartFAB);
@@ -112,6 +114,7 @@ public class CategoryActivity extends AppCompatActivity
 
         //getting data from Firebase
         adapter=new FirebaseRecyclerAdapter<Category, ViewHolder_CategoryItem>(options) {
+
             @NonNull
             @Override
             public ViewHolder_CategoryItem onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -124,16 +127,24 @@ public class CategoryActivity extends AppCompatActivity
             protected void onBindViewHolder(@NonNull ViewHolder_CategoryItem holder, int position, @NonNull Category model) {
                 holder.categoryName.setText(model.getName());
                 Picasso.get().load(model.getImage()).into(holder.categoryImage);
+
+                Log.i("obj","\nimg: "+model.getImage()+"\nname: "+model.getName());
+
                 final Category clickItem=model;
+
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
 
-                        Toast.makeText(getApplicationContext(),""+clickItem.getName(),Toast.LENGTH_SHORT).show();
+                        //get category id and send it to foodlist activity to get foodlist of specific category
+                        Intent foodListIntent=new Intent(CategoryActivity.this,FoodListActivity.class);
+                        foodListIntent.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        startActivity(foodListIntent);
                     }
                 });
 
             }
+
 
 
         };
@@ -188,5 +199,33 @@ public class CategoryActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public static class ViewHolder_CategoryItem extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public ImageView categoryImage;
+        public TextView categoryName;
+
+        public ItemClickListener itemClickListener;
+
+
+        public ViewHolder_CategoryItem(@NonNull View itemView) {
+            super(itemView);
+
+            categoryImage= (ImageView) itemView.findViewById(R.id.categoryImage);
+            categoryName=(TextView) itemView.findViewById(R.id.categoryName);
+            itemView.setOnClickListener(this);
+        }
+
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            itemClickListener.onClick(view,getAdapterPosition(),false);
+
+        }
     }
 }

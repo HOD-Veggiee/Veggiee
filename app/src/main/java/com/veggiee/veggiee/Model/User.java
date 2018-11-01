@@ -3,24 +3,17 @@ package com.veggiee.veggiee.Model;
 public class User {
 
     private String name;
-    private String password;
+    private String email;
     private String deliveryAddress;
+    private String phoneNumber;
 
-    public User()
-    {}
+    public User(){}
 
-    public User(String name, String password,String deliveryAddress) {
+    public User(String name, String email, String deliveryAddress, String phoneNumber) {
         this.name = name;
-        this.password = password;
-        this.deliveryAddress=deliveryAddress;
-    }
-
-    public String getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public void setDeliveryAddress(String deliveryAddress) {
+        this.email = email;
         this.deliveryAddress = deliveryAddress;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getName() {
@@ -31,14 +24,27 @@ public class User {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
 
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }

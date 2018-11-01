@@ -13,15 +13,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class CategoryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    FirebaseDatabase mDatabase;
+    DatabaseReference category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Categories");
         setSupportActionBar(toolbar);
+
+
+        //init firebase
+        mDatabase=FirebaseDatabase.getInstance();
+        category=mDatabase.getReference("Category");
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

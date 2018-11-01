@@ -9,12 +9,12 @@ import android.widget.TextView;
 import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.R;
 
-public class ViewHolder_CategoryItem extends RecyclerView.ViewHolder implements View.OnClickListener {
+/*public class ViewHolder_CategoryItem extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public ImageView categoryImage;
     public TextView categoryName;
 
-    private ItemClickListener itemClickListener;
+    public ItemClickListener itemClickListener;
 
 
     public ViewHolder_CategoryItem(@NonNull View itemView) {
@@ -35,4 +35,4 @@ public class ViewHolder_CategoryItem extends RecyclerView.ViewHolder implements 
         itemClickListener.onClick(view,getAdapterPosition(),false);
 
     }
-}
+}*/

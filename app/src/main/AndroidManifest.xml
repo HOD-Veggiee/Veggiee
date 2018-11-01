@@ -23,6 +23,7 @@
             android:label="@string/title_activity_category"
             android:theme="@style/AppTheme" />
         <activity android:name=".CompleteProfileActivity" />
+        <activity android:name=".FoodListActivity"></activity>
         <activity android:name=".SplashScreenActivity" android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

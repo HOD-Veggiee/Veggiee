@@ -97,8 +97,7 @@
         android:id="@+id/updateProfileButton"
         android:text="@string/proceed"
         android:layout_margin="5dp"
-        android:layout_below="@id/addressTextLayout"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         style="@style/RaisedButton"/>
 
 

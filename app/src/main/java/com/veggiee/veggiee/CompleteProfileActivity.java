@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -61,6 +62,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
         addressTIP=findViewById(R.id.addressTextLayout);
 
 
+        Common.currentUser=new User();
+
+
 
         //Firebase Auth
         mAuth=FirebaseAuth.getInstance();
@@ -78,8 +82,35 @@ public class CompleteProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //saves user to database if not already
-                saveUserToDB();
+                user=new User(nameEditText.getText().toString(),
+                        emailEditText.getText().toString(),
+                        addressEditText.getText().toString(),
+                        phoneEditText.getText().toString());
+
+
+
+
+                users.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(!(dataSnapshot.child(user.getPhoneNumber()).exists()))
+                        {
+                            users.child(user.getPhoneNumber()).setValue(user);
+                        }
+
+                        /*Log.i("user info","Name: "+Common.currentUser.getName()+"\nemail: "+Common.currentUser.getEmail()+"\nphone: "+Common.currentUser.getPhoneNumber()+"\n");
+                         */
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                Common.currentUser=user;
+
 
 
                 Intent categoryIntent=new Intent(CompleteProfileActivity.this,CategoryActivity.class);
@@ -129,34 +160,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
     private void saveUserToDB()
     {
 
-        if(mAuth.getCurrentUser()!=null)
-        {
-            provider=Objects.requireNonNull(mAuth.getCurrentUser().getProviders()).get(0);
-        }
-
-        user=new User(nameEditText.getText().toString(),
-                emailEditText.getText().toString(),
-                addressEditText.getText().toString(),
-                phoneEditText.getText().toString());
-
-
-        users.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if(!(dataSnapshot.child(user.getPhoneNumber()).exists()))
-                {
-                    users.child(user.getPhoneNumber()).setValue(user);
-                }
-
-                Common.currentUser=dataSnapshot.child(user.getPhoneNumber()).getValue(User.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 

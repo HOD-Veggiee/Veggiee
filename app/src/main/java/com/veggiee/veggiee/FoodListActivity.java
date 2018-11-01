@@ -98,10 +98,10 @@ public class FoodListActivity extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(),""+clickItem.getDescription(),Toast.LENGTH_SHORT).show();
 
-                        //get category id and send it to foodlist activity to get foodlist of specific category
-                        /*Intent foodListIntent=new Intent(CategoryActivity.this,FoodListActivity.class);
-                        foodListIntent.putExtra("CategoryId",adapter.getRef(position).getKey());
-                        startActivity(foodListIntent);*/
+                        //get food item id and send it to food detail activity to get food detail of specific food
+                        Intent foodListIntent=new Intent(FoodListActivity.this,FoodDetailActivity.class);
+                        foodListIntent.putExtra("FoodItemId",adapter.getRef(position).getKey());
+                        startActivity(foodListIntent);
                     }
                 });
             }

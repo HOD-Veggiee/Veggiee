@@ -1,20 +1,27 @@
 package com.veggiee.veggiee;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    private static int SPLASH_TIME_OUT = 3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        SystemClock.sleep(2000);
-        Intent intent = new Intent(this, AuthenticationActivity.class);
-        startActivity(intent);
-        finish();
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run()
+            {
+                Intent intent = new Intent(SplashScreenActivity.this, CategoryActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
     }
 }

@@ -18,4 +18,5 @@
     <string name="password">Password</string>
     <string name="orders">Orders</string>
     <string name="logout">Logout</string>
+    <string name="logo">Logo</string>
 </resources>

@@ -56,7 +56,7 @@ public class CategoryActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        Log.i("user info","Name: "+Common.currentUser.getName()+"\nemail: "+Common.currentUser.getEmail()+"\nphone: "+Common.currentUser.getPhoneNumber()+"\n");
+        //Log.i("user info","Name: "+Common.currentUser.getName()+"\nemail: "+Common.currentUser.getEmail()+"\nphone: "+Common.currentUser.getPhoneNumber()+"\n");
 
 
         //init firebase
@@ -100,14 +100,13 @@ public class CategoryActivity extends AppCompatActivity
         //setting name of user in app drawer
         View headerView=navigationView.getHeaderView(0);
         username=(TextView) headerView.findViewById(R.id.userName);
-        username.setText(Common.currentUser.getName());
+        //username.setText(Common.currentUser.getName());
+        username.setText("Guest");
 
 
     }
 
     private void loadCategoriesData() {
-
-
 
         FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
                 .setQuery(category, Category.class).build();

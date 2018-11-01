@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,7 +22,6 @@ import com.squareup.picasso.Picasso;
 import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.Model.Category;
 import com.veggiee.veggiee.Model.Food;
-import com.veggiee.veggiee.ViewHolder.ViewHolder_Item;
 
 public class FoodListActivity extends AppCompatActivity {
 
@@ -68,12 +69,12 @@ public class FoodListActivity extends AppCompatActivity {
 
     private void loadFoodList(String categoryId) {
 
+
         FirebaseRecyclerOptions<Food> options = new FirebaseRecyclerOptions.Builder<Food>()
-                .setQuery(food.orderByChild("MenuId").equalTo(categoryId), Food.class).build();
+                .setQuery(food.orderByChild("MenuID").equalTo(categoryId), Food.class).build();
 
         //getting data from Firebase
         adapter=new FirebaseRecyclerAdapter<Food, ViewHolder_Item>(options) {
-
             @NonNull
             @Override
             public ViewHolder_Item onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -95,7 +96,7 @@ public class FoodListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
 
-                        Toast.makeText(getApplicationContext(),""+model.getDescription(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),""+clickItem.getDescription(),Toast.LENGTH_SHORT).show();
 
                         //get category id and send it to foodlist activity to get foodlist of specific category
                         /*Intent foodListIntent=new Intent(CategoryActivity.this,FoodListActivity.class);
@@ -103,14 +104,51 @@ public class FoodListActivity extends AppCompatActivity {
                         startActivity(foodListIntent);*/
                     }
                 });
-
             }
-
-
-
         };
 
         mRecyclerView.setAdapter(adapter);
-
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+
+    public static class ViewHolder_Item extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        public ImageView foodImage;
+        public TextView foodName;
+
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
+        }
+
+        public ItemClickListener itemClickListener;
+
+        public ViewHolder_Item(@NonNull View itemView) {
+            super(itemView);
+
+            foodImage= (ImageView) itemView.findViewById(R.id.foodImage);
+            foodName=(TextView) itemView.findViewById(R.id.foodName);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            itemClickListener.onClick(view,getAdapterPosition(),false);
+
+        }
+    }
+
 }

@@ -46,6 +46,15 @@ public class AuthenticationActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent cat=new Intent(AuthenticationActivity.this,CategoryActivity.class);
+        startActivity(cat);
+        finish();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);super.onActivityResult(requestCode, resultCode, data);
 

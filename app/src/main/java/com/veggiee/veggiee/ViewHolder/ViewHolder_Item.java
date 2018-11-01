@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.R;
 
+/*
 public class ViewHolder_Item extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     public ImageView foodImage;
@@ -35,3 +36,4 @@ public class ViewHolder_Item extends RecyclerView.ViewHolder implements View.OnC
 
     }
 }
+*/

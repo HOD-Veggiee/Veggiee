@@ -78,6 +78,52 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
         fillPresentInfo();
 
+        proceedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                user=new User(nameEditText.getText().toString(),
+                        emailEditText.getText().toString(),
+                        addressEditText.getText().toString(),
+                        phoneEditText.getText().toString());
+
+
+
+
+                users.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(!(dataSnapshot.child(user.getPhoneNumber()).exists()))
+                        {
+                            users.child(user.getPhoneNumber()).setValue(user);
+                        }
+
+                        /*Log.i("user info","Name: "+Common.currentUser.getName()+"\nemail: "+Common.currentUser.getEmail()+"\nphone: "+Common.currentUser.getPhoneNumber()+"\n");
+                         */
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                Common.currentUser=user;
+
+
+
+                Intent categoryIntent=new Intent(CompleteProfileActivity.this,CategoryActivity.class);
+                startActivity(categoryIntent);
+                finish();
+            }
+        });
+
+
+
+
+
+
     }
 
     private void fillPresentInfo()

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.veggiee.veggiee">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +22,8 @@
             android:name=".CategoryActivity"
             android:label="@string/title_activity_category"
             android:theme="@style/AppTheme" />
-        <activity android:name=".CompleteProfileActivity"></activity>
+        <activity android:name=".CompleteProfileActivity" />
+        <activity android:name=".FoodListActivity"></activity>
     </application>
 
 </manifest>

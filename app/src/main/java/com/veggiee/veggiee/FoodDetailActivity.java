@@ -3,10 +3,14 @@ package com.veggiee.veggiee;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.firebase.database.DataSnapshot;
@@ -15,7 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.veggiee.veggiee.Database.Database;
 import com.veggiee.veggiee.Model.Food;
+import com.veggiee.veggiee.Model.Order;
 
 public class FoodDetailActivity extends AppCompatActivity {
 
@@ -32,6 +38,9 @@ public class FoodDetailActivity extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     DatabaseReference food;
 
+
+    Food currentFood;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +56,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         collapsingToolbarLayout=(CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
+        addToCartButton=(FloatingActionButton) findViewById(R.id.addToCartButton);
 
         //init firebase
         mDatabase=FirebaseDatabase.getInstance();
@@ -58,6 +68,28 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         if(!foodItemId.isEmpty())
             getFoodItemDetails(foodItemId);
+
+
+
+        //onclicks
+        addToCartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new Database(getBaseContext()).addToCart(
+                        new Order(
+                                foodItemId,
+                                currentFood.getName(),
+                                quantityButton.getNumber(),
+                                currentFood.getPrice(),
+                                currentFood.getDiscount()
+                        )
+                );
+
+
+                Toast.makeText(getApplicationContext(),"Added to cart.",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void getFoodItemDetails(final String foodItemId) {
@@ -65,14 +97,14 @@ public class FoodDetailActivity extends AppCompatActivity {
         food.child(foodItemId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Food food=dataSnapshot.getValue(Food.class);
+                currentFood=dataSnapshot.getValue(Food.class);
 
-                Picasso.get().load(food.getImage()).into(foodItemImage);
+                Picasso.get().load(currentFood.getImage()).into(foodItemImage);
 
-                collapsingToolbarLayout.setTitle(food.getName());
-                foodItemPrice.setText("RS "+food.getPrice()+"-/");
-                foodIItemName.setText(food.getName());
-                foodItemDescription.setText(food.getDescription());
+                collapsingToolbarLayout.setTitle(currentFood.getName());
+                foodItemPrice.setText("RS "+currentFood.getPrice()+" -/");
+                foodIItemName.setText(currentFood.getName());
+                foodItemDescription.setText(currentFood.getDescription());
             }
 
             @Override

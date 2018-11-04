@@ -1,5 +1,7 @@
 package com.veggiee.veggiee.Model;
 
+import android.util.Log;
+
 public class User {
 
     private String name;
@@ -7,7 +9,9 @@ public class User {
     private String deliveryAddress;
     private String phoneNumber;
 
-    public User(){}
+    public User(){
+
+    }
 
     public User(String name, String email, String deliveryAddress, String phoneNumber) {
         this.name = name;
@@ -46,5 +50,11 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void printUser()
+    {
+        Log.i("userinfoo","\nName:\t"+getName()+"\nEmail:\t"+getEmail()+"\nAddressL\t"+getDeliveryAddress()+"\nPhone:\t"+getPhoneNumber());
+        /*System.out.print("\nName:\t"+getName()+"\nEmail:\t"+getEmail()+"\nAddressL\t"+getDeliveryAddress()+"\nPhone:\t"+getPhoneNumber());*/
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,8 +51,9 @@ public class FoodListActivity extends AppCompatActivity {
 
         //init views
         mRecyclerView=(RecyclerView) findViewById(R.id.FoodListRecyclerView);
-        mLayoutManager=new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+       /* mLayoutManager=new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);*/
+       mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
 
 
         //getting category id from category screen

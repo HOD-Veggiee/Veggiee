@@ -2,38 +2,38 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="4dp"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginTop="5dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:weightSum="10">
+        android:layout_height="match_parent">
 
 
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:src="@drawable/ic_orders"
             android:id="@+id/foodImage"
-            android:layout_weight="3"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="5dp"
             android:scaleType="centerCrop"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
             android:id="@+id/foodName"
+            android:background="@color/overlayBackground"
+            android:layout_alignParentBottom="true"
             android:text="Fast Food"
             android:textSize="23sp"
             android:textAlignment="center"
-            android:layout_gravity="center_vertical"/>
+            android:gravity="center"
+            android:textColor="@android:color/white"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

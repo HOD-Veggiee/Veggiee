@@ -40,6 +40,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setLogo(R.drawable.sabzi)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -49,9 +50,9 @@ public class AuthenticationActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        Intent cat=new Intent(AuthenticationActivity.this,CategoryActivity.class);
+        /*Intent cat=new Intent(AuthenticationActivity.this,CategoryActivity.class);
         startActivity(cat);
-        finish();
+        finish();*/
     }
 
     @Override
@@ -64,9 +65,6 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             if(resultCode==RESULT_OK)
             {
-                // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
                 Intent completeProfileIntent=new Intent(AuthenticationActivity.this,CompleteProfileActivity.class);
                 startActivity(completeProfileIntent);
                 finish();

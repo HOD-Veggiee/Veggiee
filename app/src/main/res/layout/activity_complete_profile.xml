@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".CompleteProfileActivity"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:id="@+id/relativeLayout">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

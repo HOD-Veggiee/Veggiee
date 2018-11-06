@@ -52,7 +52,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         /*Intent cat=new Intent(AuthenticationActivity.this,CategoryActivity.class);
         startActivity(cat);
-        finish();*/
+        finish();/**/
     }
 
     @Override

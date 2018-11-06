@@ -74,7 +74,7 @@ public class CategoryActivity extends AppCompatActivity
             Intent loginIntent=new Intent(CategoryActivity.this,AuthenticationActivity.class);
             startActivity(loginIntent);
             finish();
-        }
+        }/**/
 
         setContentView(R.layout.activity_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

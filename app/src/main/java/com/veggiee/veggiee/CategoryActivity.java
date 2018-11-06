@@ -42,6 +42,7 @@ import com.veggiee.veggiee.Common.Common;
 import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.Model.Category;
 import com.veggiee.veggiee.Model.User;
+import com.veggiee.veggiee.Service.ListenOrder;
 
 import java.util.Objects;
 
@@ -149,6 +150,10 @@ public class CategoryActivity extends AppCompatActivity
         backgroundTasks.execute();
 
         loadCategoriesData();
+
+        // Register Service
+        Intent service = new Intent(CategoryActivity.this, ListenOrder.class);
+        startService(service);
 
         /*adapter.notifyDataSetChanged();*/
 

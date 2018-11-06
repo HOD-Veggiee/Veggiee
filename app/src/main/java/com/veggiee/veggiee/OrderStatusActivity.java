@@ -62,8 +62,10 @@ public class OrderStatusActivity extends AppCompatActivity {
         mDatabase=FirebaseDatabase.getInstance();
         requests=mDatabase.getReference("Request");
 
-
-        loadOrders(Common.currentUser.getPhoneNumber());
+        if(getIntent() == null)
+            loadOrders(Common.currentUser.getPhoneNumber());
+        else
+            loadOrders(getIntent().getStringExtra("userPhone"));
     }
 
     private void loadOrders(String phoneNumber) {

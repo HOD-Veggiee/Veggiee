@@ -43,6 +43,7 @@ import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.Model.Category;
 import com.veggiee.veggiee.Model.User;
 import com.veggiee.veggiee.Service.ListenOrder;
+import com.veggiee.veggiee.Utility.SquareImage;
 
 import java.util.Objects;
 
@@ -349,7 +350,7 @@ public class CategoryActivity extends AppCompatActivity
 
     public static class ViewHolder_CategoryItem extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ImageView categoryImage;
+        public SquareImage categoryImage;
         public TextView categoryName;
 
         public ItemClickListener itemClickListener;
@@ -358,7 +359,7 @@ public class CategoryActivity extends AppCompatActivity
         public ViewHolder_CategoryItem(@NonNull View itemView) {
             super(itemView);
 
-            categoryImage= (ImageView) itemView.findViewById(R.id.categoryImage);
+            categoryImage= (SquareImage) itemView.findViewById(R.id.categoryImage);
             categoryName=(TextView) itemView.findViewById(R.id.categoryName);
             itemView.setOnClickListener(this);
         }

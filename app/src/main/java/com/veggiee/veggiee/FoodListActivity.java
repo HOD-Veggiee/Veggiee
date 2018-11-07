@@ -73,7 +73,7 @@ public class FoodListActivity extends AppCompatActivity {
 
 
         FirebaseRecyclerOptions<Food> options = new FirebaseRecyclerOptions.Builder<Food>()
-                .setQuery(food.orderByChild("MenuID").equalTo(categoryId), Food.class).build();
+                .setQuery(food.orderByChild("menuId").equalTo(categoryId), Food.class).build();
 
         //getting data from Firebase
         adapter=new FirebaseRecyclerAdapter<Food, ViewHolder_Item>(options) {

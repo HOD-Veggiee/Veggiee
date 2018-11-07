@@ -62,17 +62,23 @@ public class OrderStatusActivity extends AppCompatActivity {
         mDatabase=FirebaseDatabase.getInstance();
         requests=mDatabase.getReference("Request");
 
-        if(getIntent() == null)
+        loadOrders(Common.currentUser.getPhoneNumber());
+        /*
+        if(getIntent() == null){
+            Toast.makeText(OrderStatusActivity.this, "= Common > " + Common.currentUser.getPhoneNumber() + " <=", Toast.LENGTH_LONG).show();
             loadOrders(Common.currentUser.getPhoneNumber());
+        }
         else
+        {
+            Toast.makeText(OrderStatusActivity.this, "= userPhone > " + getIntent().getStringExtra("userPhone") + " <=", Toast.LENGTH_LONG).show();
             loadOrders(getIntent().getStringExtra("userPhone"));
+        }/**/
     }
 
     private void loadOrders(String phoneNumber) {
 
         FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()
                 .setQuery(requests.orderByChild("phone").equalTo(phoneNumber),Request.class).build();
-
 
         adapter=new FirebaseRecyclerAdapter<Request, ViewHolder_Order>(options) {
             @Override

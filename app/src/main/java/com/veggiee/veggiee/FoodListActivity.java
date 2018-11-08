@@ -14,14 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.veggiee.veggiee.Interface.ItemClickListener;
-import com.veggiee.veggiee.Model.Category;
 import com.veggiee.veggiee.Model.Food;
 
 public class FoodListActivity extends AppCompatActivity {

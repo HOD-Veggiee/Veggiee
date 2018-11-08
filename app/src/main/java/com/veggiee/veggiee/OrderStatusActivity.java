@@ -62,6 +62,7 @@ public class OrderStatusActivity extends AppCompatActivity {
         mDatabase=FirebaseDatabase.getInstance();
         requests=mDatabase.getReference("Request");
 
+
         loadOrders(Common.currentUser.getPhoneNumber());
         /*
         if(getIntent() == null){
@@ -79,6 +80,7 @@ public class OrderStatusActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()
                 .setQuery(requests.orderByChild("phone").equalTo(phoneNumber),Request.class).build();
+
 
         adapter=new FirebaseRecyclerAdapter<Request, ViewHolder_Order>(options) {
             @Override

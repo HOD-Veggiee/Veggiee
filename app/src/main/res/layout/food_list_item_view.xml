@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
 
-        <ImageView
+        <com.veggiee.veggiee.Utility.SquareImage
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_orders"
@@ -26,13 +26,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/foodName"
-            android:background="@color/overlayBackground"
-            android:layout_alignParentBottom="true"
             android:text="Fast Food"
             android:textSize="23sp"
-            android:textAlignment="center"
+            android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:background="@color/overlayBackground"/>
 
     </RelativeLayout>
 

@@ -35,4 +35,4 @@ import com.veggiee.veggiee.R;
         itemClickListener.onClick(view,getAdapterPosition(),false);
 
     }
-}*/
+}/**/

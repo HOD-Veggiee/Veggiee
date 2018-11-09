@@ -51,46 +51,40 @@ public class Database extends SQLiteAssetHelper {
         return result;
     }
 
-
     public void addToCart(Order order)
     {
         SQLiteDatabase database=getReadableDatabase();
         SQLiteQueryBuilder queryBuilder=new SQLiteQueryBuilder();
 
-        String[] sqlSelect={"ProductId","Quantity"};
+        String[] sqlSelect={"ProductId","Quantity", "Price"};
         String whereClause = "ProductId = '" + order.getProductId()+"'";
         String sqlTable="OrderDetail";
         queryBuilder.setTables(sqlTable);
-        Cursor c=queryBuilder.query(database,sqlSelect,whereClause,null,null,null,null,null);
+        Cursor cur = queryBuilder.query(database,sqlSelect,whereClause,null,null,null,null,null);
 
-        Log.i("curinfo",String.valueOf(c.getCount()));
+        if(!(cur.moveToFirst()) || cur.getCount() == 0){
 
-        if(!(c.moveToFirst()) || c.getCount() == 0){
-
-            Log.i("curinfo",String.valueOf(c.getCount()));
-
-            String query=String.format("INSERT INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount) VALUES ('%S','%S','%S','%S','%S');",
-                order.getProductId(),
-                order.getProductName(),
-                order.getQuantity(),
-                order.getPrice(),
-                order.getDiscount());
-
-
-
+            String query=String.format("INSERT INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount) " +
+                    "VALUES ('"+order.getProductId()+"','"+order.getProductName()+"','"+order.getQuantity()+"','"+order.getPrice()+"','"+order.getDiscount()+"');");
 
             database.execSQL(query);
         }
         else{
 
-            Log.i("curinfo",String.valueOf(c.getCount()));
+            String count=cur.getString(cur.getColumnIndex("Quantity"));
+            String price=cur.getString(cur.getColumnIndex("Price"));
 
-            String count=c.getString(c.getColumnIndex("Quantity"));
+            int previousPrice=Integer.parseInt(price);
             int previousQuantity=Integer.parseInt(count);
-            int newQuantity=Integer.parseInt(order.getQuantity());
-            String finalQuantity=String.valueOf(previousQuantity+newQuantity);
 
-            String query="UPDATE OrderDetail SET Quantity='"+finalQuantity+"' WHERE ProductId='"+order.getProductId()+"'";
+            int perItemPrice = previousPrice/previousQuantity;
+
+            int newQuantity=Integer.parseInt(order.getQuantity());
+            int finalQuantity= previousQuantity+newQuantity;
+
+            String finalPrice=String.valueOf(perItemPrice*finalQuantity);
+
+            String query="UPDATE OrderDetail SET Quantity='"+String.valueOf(finalQuantity)+"', Price='"+finalPrice+"' WHERE ProductId='"+order.getProductId()+"'";
             database.execSQL(query);
         }
 

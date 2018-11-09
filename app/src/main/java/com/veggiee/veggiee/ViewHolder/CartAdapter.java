@@ -74,7 +74,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
 
         cartViewHolder.cartItemCount.setNumber(cartList.get(i).getQuantity());
 
-        cartViewHolder.cartItemPrice.setText(String.valueOf(Integer.parseInt(cartList.get(i).getQuantity())*Integer.parseInt(cartList.get(i).getPrice())));
+        cartViewHolder.cartItemPrice.setText(cartList.get(i).getPrice());
 
         cartViewHolder.cartItemName.setText(cartList.get(i).getProductName());
 
@@ -104,6 +104,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
         new Database(context).deleteItem(cartList.get(position).getProductId());
         cartList.remove(position);
         notifyItemRemoved(position);
+        notifyDataSetChanged();
     }
 
 }

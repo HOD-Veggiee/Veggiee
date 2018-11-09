@@ -12,20 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AuthenticationActivity">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
-        <activity
-            android:name=".CategoryActivity"
-            android:label="@string/title_activity_category"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".AuthenticationActivity"/>
+        <activity android:name=".CategoryActivity" />
         <activity android:name=".CompleteProfileActivity" />
         <activity android:name=".FoodListActivity" />
         <activity android:name=".FoodDetailActivity" />

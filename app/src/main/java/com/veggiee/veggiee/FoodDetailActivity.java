@@ -1,11 +1,13 @@
 package com.veggiee.veggiee;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -69,9 +71,6 @@ public class FoodDetailActivity extends AppCompatActivity {
         if(!foodItemId.isEmpty())
             getFoodItemDetails(foodItemId);
 
-
-
-        //onclicks
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +80,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                                 foodItemId,
                                 currentFood.getName(),
                                 quantityButton.getNumber(),
-                                currentFood.getPrice(),
+                                String.valueOf(Integer.parseInt(currentFood.getPrice())*Integer.parseInt(quantityButton.getNumber())),
                                 currentFood.getDiscount()
                         )
                 );
@@ -112,6 +111,5 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             }
         });
-
     }
 }

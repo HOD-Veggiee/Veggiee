@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.veggiee.veggiee.Utility.SquareImage;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -36,10 +37,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.veggiee.veggiee.Common.Common;
 import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.Model.Category;
+import com.veggiee.veggiee.Model.User;
+
+import java.util.Objects;
 
 
 public class CategoryActivity extends AppCompatActivity
@@ -47,13 +52,18 @@ public class CategoryActivity extends AppCompatActivity
 
 
     FirebaseDatabase mDatabase;
-    DatabaseReference category;
+    DatabaseReference category,user;
 
     TextView username;
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
+    String phoneNumber=null,name=null;
 
     FirebaseRecyclerAdapter<Category,ViewHolder_CategoryItem> adapter;
+
+    ProgressBar mProgressBar;
+
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +75,7 @@ public class CategoryActivity extends AppCompatActivity
             Intent loginIntent=new Intent(CategoryActivity.this,AuthenticationActivity.class);
             startActivity(loginIntent);
             finish();
-        }/**/
+        }
 
         setContentView(R.layout.activity_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -73,34 +83,84 @@ public class CategoryActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        //Log.i("user info","Name: "+Common.currentUser.getName()+"\nemail: "+Common.currentUser.getEmail()+"\nphone: "+Common.currentUser.getPhoneNumber()+"\n");
+        //init views
+        username=findViewById(R.id.userName);
+        mRecyclerView=(RecyclerView) findViewById(R.id.categoriesRecyclerView);
+        //mLayoutManager=new LinearLayoutManager(this);
+        //mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        mProgressBar=(ProgressBar) findViewById(R.id.progress_bar);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerView=navigationView.getHeaderView(0);
+        username=(TextView) headerView.findViewById(R.id.userName);
 
 
         //init firebase
         mDatabase=FirebaseDatabase.getInstance();
         category=mDatabase.getReference("Category");
+        user=mDatabase.getReference("User");
 
-        //init views
-        username=findViewById(R.id.userName);
+        //getting phone number from shared preference to load user information from firebase
+        phoneNumber=getPhoneNumberFromSharedPref();
+        name=getNameFromSharedPref();
+        username.setText(name);
 
-        //load recycler view
-        mRecyclerView=(RecyclerView) findViewById(R.id.categoriesRecyclerView);
-        //mRecyclerView.setHasFixedSize(true);
-        mLayoutManager=new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+        //=======================================
+        //IMPORTANT; If phoneNumber is null it means Shared prefs are removed or modified, hence send back user to login
+        //=======================================
+
+        if(phoneNumber==null || phoneNumber.isEmpty())
+        {
+            Intent loginIntent=new Intent(CategoryActivity.this,AuthenticationActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }
+
+/*        user.orderByChild("phoneNumber").equalTo(phoneNumber).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(Common.currentUser==null)
+                {
+                    for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                        if(Objects.requireNonNull(userSnapshot.getValue(User.class)).getPhoneNumber().equals(phoneNumber))
+                        {
+                            Common.currentUser= new User(
+                                    Objects.requireNonNull(userSnapshot.getValue(User.class)).getName(),
+                                    Objects.requireNonNull(userSnapshot.getValue(User.class)).getEmail(),
+                                    Objects.requireNonNull(userSnapshot.getValue(User.class)).getDeliveryAddress(),
+                                    Objects.requireNonNull(userSnapshot.getValue(User.class)).getPhoneNumber()
+                            );
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
+
+        BackgroundTasks backgroundTasks=new BackgroundTasks();
+        backgroundTasks.execute();
 
         loadCategoriesData();
 
-        adapter.notifyDataSetChanged();
-
+        /*adapter.notifyDataSetChanged();*/
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewCartFAB);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Cart will be shown on press", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent cartIntent=new Intent(CategoryActivity.this,CartActivity.class);
+                startActivity(cartIntent);
             }
         });
 
@@ -110,17 +170,76 @@ public class CategoryActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+    }
 
 
-        //setting name of user in app drawer
-        View headerView=navigationView.getHeaderView(0);
-        username=(TextView) headerView.findViewById(R.id.userName);
-        //username.setText(Common.currentUser.getName());
-        username.setText("Guest");
+    public class BackgroundTasks extends AsyncTask<Void,Void,Void>
+    {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            user.orderByChild("phoneNumber").equalTo(phoneNumber).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(Common.currentUser==null)
+                    {
+                        for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                            if(Objects.requireNonNull(userSnapshot.getValue(User.class)).getPhoneNumber().equals(phoneNumber))
+                            {
+                                Common.currentUser= new User(
+                                        Objects.requireNonNull(userSnapshot.getValue(User.class)).getName(),
+                                        Objects.requireNonNull(userSnapshot.getValue(User.class)).getEmail(),
+                                        Objects.requireNonNull(userSnapshot.getValue(User.class)).getDeliveryAddress(),
+                                        Objects.requireNonNull(userSnapshot.getValue(User.class)).getPhoneNumber()
+                                );
+                                break;
+                            }
+                        }
+
+                        Common.currentUser.printUser();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            mProgressBar.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            adapter.notifyDataSetChanged();
+            /*username.setText(Common.currentUser.getName());*/
+        }
+    }
 
 
+
+
+    private String getPhoneNumberFromSharedPref() {
+
+        SharedPreferences pref=getSharedPreferences("NUM_Info",Context.MODE_PRIVATE);
+        String number=pref.getString("phoneNumber","");
+        //Toast.makeText(getApplicationContext(),number,Toast.LENGTH_SHORT).show();
+
+        return number;
+    }
+
+    private String getNameFromSharedPref()
+    {
+        SharedPreferences pref=getSharedPreferences("NUM_Info",Context.MODE_PRIVATE);
+        String name=pref.getString("name","");
+        //Toast.makeText(getApplicationContext(),number,Toast.LENGTH_SHORT).show();
+
+        return name;
     }
 
     private void loadCategoriesData() {
@@ -158,11 +277,7 @@ public class CategoryActivity extends AppCompatActivity
                         startActivity(foodListIntent);
                     }
                 });
-
             }
-
-
-
         };
 
         mRecyclerView.setAdapter(adapter);
@@ -208,8 +323,19 @@ public class CategoryActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.logout) {
-            // Handle the camera action
+        switch (id)
+        {
+            case R.id.logout:
+                Intent loginIntent=new Intent(CategoryActivity.this,AuthenticationActivity.class);
+                loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(loginIntent);
+                finish();
+                break;
+
+            case R.id.orderStatus:
+                Intent orderStatusIntent=new Intent(CategoryActivity.this,OrderStatusActivity.class);
+                startActivity(orderStatusIntent);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -219,7 +345,7 @@ public class CategoryActivity extends AppCompatActivity
 
     public static class ViewHolder_CategoryItem extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ImageView categoryImage;
+        public SquareImage categoryImage;
         public TextView categoryName;
 
         public ItemClickListener itemClickListener;
@@ -228,7 +354,7 @@ public class CategoryActivity extends AppCompatActivity
         public ViewHolder_CategoryItem(@NonNull View itemView) {
             super(itemView);
 
-            categoryImage= (ImageView) itemView.findViewById(R.id.categoryImage);
+            categoryImage= (SquareImage) itemView.findViewById(R.id.categoryImage);
             categoryName=(TextView) itemView.findViewById(R.id.categoryName);
             itemView.setOnClickListener(this);
         }

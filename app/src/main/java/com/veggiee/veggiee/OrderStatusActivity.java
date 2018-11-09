@@ -160,8 +160,6 @@ public class OrderStatusActivity extends AppCompatActivity {
 
 
                         foodListDialog.show();
-
-                        Toast.makeText(getApplicationContext(),"sasa",Toast.LENGTH_LONG).show();
                     }
                 });
             }

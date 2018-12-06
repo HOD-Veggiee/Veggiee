@@ -9,7 +9,29 @@
     tools:showIn="@layout/app_bar_category">
 
 
+    <ViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/v_flipper"
+        android:animateFirstView="true"
+        android:backgroundTint="@color/colorPrimary">
+
+    </ViewFlipper>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/v_flipper"
+        android:id="@+id/IV"/>
+
+
+
+
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/IV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/categoriesRecyclerView"

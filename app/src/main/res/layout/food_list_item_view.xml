@@ -27,11 +27,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/foodName"
             android:text="Fast Food"
-            android:textSize="23sp"
-            android:layout_alignParentBottom="true"
+            android:textSize="17dp"
+            android:layout_below="@+id/foodImage"
             android:gravity="center"
-            android:textColor="@android:color/white"
-            android:background="@color/overlayBackground"/>
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:background="@android:color/white"/>
 
     </RelativeLayout>
 

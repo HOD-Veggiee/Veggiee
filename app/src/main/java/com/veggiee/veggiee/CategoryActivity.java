@@ -28,6 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
+
 import com.veggiee.veggiee.Utility.SquareImage;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -65,6 +67,8 @@ public class CategoryActivity extends AppCompatActivity
 
     NavigationView navigationView;
 
+    ViewFlipper v_flipper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +92,7 @@ public class CategoryActivity extends AppCompatActivity
         mRecyclerView=(RecyclerView) findViewById(R.id.categoriesRecyclerView);
         //mLayoutManager=new LinearLayoutManager(this);
         //mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this,3));
         mProgressBar=(ProgressBar) findViewById(R.id.progress_bar);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -170,8 +174,27 @@ public class CategoryActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        int images[] = {R.drawable.slider1, R.drawable.slider2, R.drawable.slider3};
+        v_flipper = findViewById(R.id.v_flipper);
+
+        for (int image: images)
+        {
+            floater_images(image);
+        }
+
     }
 
+
+    public void floater_images(int image)
+    {
+        ImageView imagevew = new ImageView(this);
+        imagevew.setBackgroundResource(image);
+        v_flipper.addView(imagevew);
+        v_flipper.setFlipInterval(4000);
+        v_flipper.setAutoStart(true);
+        v_flipper.setInAnimation(this, android.R.anim.slide_in_left);
+        v_flipper.setOutAnimation(this, android.R.anim.slide_out_right);
+    }
 
     public class BackgroundTasks extends AsyncTask<Void,Void,Void>
     {

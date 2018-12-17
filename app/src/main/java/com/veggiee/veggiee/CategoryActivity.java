@@ -220,7 +220,7 @@ public class CategoryActivity extends AppCompatActivity
                             }
                         }
 
-                        Common.currentUser.printUser();
+                        //Common.currentUser.printUser();
                     }
                 }
 

@@ -51,8 +51,11 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Foods");
+        toolbar.setTitle("Items");
         setSupportActionBar(toolbar);
+
+
+
 
         //init firebase
         mDatabase=FirebaseDatabase.getInstance();
@@ -61,15 +64,16 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
 
         //init views
         mRecyclerView=(RecyclerView) findViewById(R.id.FoodListRecyclerView);
-       /* mLayoutManager=new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);*/
-       mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+       mLayoutManager=new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+      /* mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));*/
 
 
         //getting category id from category screen
         if(getIntent()!=null)
         {
             categoryId=getIntent().getStringExtra("CategoryId");
+
         }
 
 

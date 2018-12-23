@@ -12,6 +12,10 @@ public class Order {
 
     public Order(String productId, String productName, String quantity, String price, String discount) {
         ProductId = productId;
+
+        if (productName.contains("'"))
+            productName=productName.replaceAll("'", "''");
+
         ProductName = productName;
         Quantity = quantity;
         Price = price;
@@ -32,6 +36,9 @@ public class Order {
     }
 
     public void setProductName(String productName) {
+        if (productName.contains("'"))
+            productName=productName.replaceAll("'", "''");
+
         ProductName = productName;
     }
 

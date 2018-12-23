@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -42,6 +43,8 @@ public class OrderStatusActivity extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     DatabaseReference requests;
 
+    TextView emptyOrderText;
+
 
     FirebaseRecyclerAdapter<Request,ViewHolder_Order> adapter;
 
@@ -54,6 +57,7 @@ public class OrderStatusActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_status);
 
         //init views
+        emptyOrderText = (TextView)findViewById(R.id.emptyOrderText);
         mRecyclerView=(RecyclerView) findViewById(R.id.ordersListRecyclerView);
         mLinearLayout=new LinearLayoutManager (this);
         mRecyclerView.setLayoutManager(mLinearLayout);
@@ -63,7 +67,11 @@ public class OrderStatusActivity extends AppCompatActivity {
         requests=mDatabase.getReference("Request");
 
 
-        loadOrders(Common.currentUser.getPhoneNumber());
+        if (Common.isConnectedToInternet(getBaseContext()))
+            loadOrders(Common.currentUser.getPhoneNumber());
+        else
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+
         /*
         if(getIntent() == null){
             Toast.makeText(OrderStatusActivity.this, "= Common > " + Common.currentUser.getPhoneNumber() + " <=", Toast.LENGTH_LONG).show();
@@ -87,25 +95,7 @@ public class OrderStatusActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull final ViewHolder_Order holder, int position, @NonNull final Request model) {
 
                 holder.orderId.setText(adapter.getRef(position).getKey());
-
-                switch (model.getStatus())
-                {
-                    case "0":
-                        holder.orderStatus.setText("Order placed.");
-                        break;
-
-                    case "1":
-                        holder.orderStatus.setText("In Process.");
-                        break;
-
-                    case "2":
-                        holder.orderStatus.setText("On way.");
-                        break;
-
-                    default:
-                        holder.orderStatus.setText("In Process");
-                }
-
+                holder.orderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 holder.orderPhoneNumber.setText(model.getPhone());
                 holder.orderAddress.setText(model.getAddress());
 
@@ -174,20 +164,33 @@ public class OrderStatusActivity extends AppCompatActivity {
         };
 
         mRecyclerView.setAdapter(adapter);
+
+        requests.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren())
+                    emptyOrderText.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        adapter.startListening();
+        if (Common.isConnectedToInternet(getBaseContext()))
+            adapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        adapter.stopListening();
+        if (Common.isConnectedToInternet(getBaseContext()))
+            adapter.stopListening();
     }
 }

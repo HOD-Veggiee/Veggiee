@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.veggiee.veggiee.Common.Common;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +22,9 @@ public class AuthenticationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         AuthUiSetup();
+
+        if (!Common.isConnectedToInternet(getBaseContext()))
+            Toast.makeText(AuthenticationActivity.this, "Please Check your Internet Connection", Toast.LENGTH_LONG).show();
 
     }
 

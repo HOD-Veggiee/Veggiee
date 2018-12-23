@@ -21,4 +21,23 @@
     <string name="place_order">Place Order</string>
     <string name="order_status">Order Status</string>
     <string name="logo">Logo</string>
+    <string name="channel_name">Order Status</string>
+    <string name="channel_description">Changing of order status by admin</string>
+    <string name="emptyViewText">Coming Soon!!!</string>
+    <string name="no_order_placed_yet">No Order placed yet!!!</string>
+    <string name="no_internet">No Internet</string>
+    <string name="background_image">background image</string>
+    <string name="fast_food">Fast Food</string>
+    <string name="sub_category_text">Sub Category</string>
+    <string name="fast_food_text">Fast Food</string>
+    <string name="rs_text">Rs.</string>
+    <string name="text_100">100</string>
+    <string name="label_price">Price: Rs</string>
+    <string name="label_price_sign">-/</string>
+    <string name="label_discount">Discount:</string>
+    <string name="label_discount_sign">%</string>
+    <string name="food_name">Food Name</string>
+    <string name="price_rs_1000">Price: Rs 1000/-</string>
+    <string name="discount_10">Discount: 10%</string>
+    <string name="description">Description</string>
 </resources>

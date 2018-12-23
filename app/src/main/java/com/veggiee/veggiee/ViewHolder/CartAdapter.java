@@ -80,8 +80,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
 
         final int pricePerItem=Integer.parseInt(cartViewHolder.cartItemPrice.getText().toString())/Integer.parseInt(cartList.get(i).getQuantity());
 
-        Toast.makeText(context,""+pricePerItem,Toast.LENGTH_SHORT).show();
-
         cartViewHolder.cartItemCount.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {

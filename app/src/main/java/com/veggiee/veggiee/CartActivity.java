@@ -10,21 +10,35 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.veggiee.veggiee.Common.Common;
 import com.veggiee.veggiee.Database.Database;
+import com.veggiee.veggiee.Model.MyResponse;
+import com.veggiee.veggiee.Model.Notification;
 import com.veggiee.veggiee.Model.Order;
 import com.veggiee.veggiee.Model.Request;
+import com.veggiee.veggiee.Model.Sender;
+import com.veggiee.veggiee.Model.Token;
+import com.veggiee.veggiee.Remote.APIService;
 import com.veggiee.veggiee.ViewHolder.CartAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -48,10 +62,15 @@ public class CartActivity extends AppCompatActivity {
     List<Order> cartItems=new ArrayList<>();
     CartAdapter adapter;
 
+    APIService mService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        //init Service
+        mService = Common.getFCMService();
 
         //init views
         mRecyclerView=(RecyclerView) findViewById(R.id.cartRecyclerView);
@@ -259,11 +278,57 @@ public class CartActivity extends AppCompatActivity {
         );
 
         //pushing order to Firebase. Current time in miliseconds will be used as order key to keep it unique
-        requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+        String order_number = String.valueOf(System.currentTimeMillis());
+        requests.child(order_number).setValue(request);
 
         //cleaning cart
         new Database(this).cleanCart();
-        Toast.makeText(getApplicationContext(),"Order Placed",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Order Placed", Toast.LENGTH_LONG).show();
         finish();
+
+        sendNotificationOrder(order_number);
+    }
+
+    private void sendNotificationOrder(final String order_number) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query data = tokens.orderByChild("isServerToken").equalTo(true); // Get all node with isServerToken is true
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot:dataSnapshot.getChildren())
+                {
+                    Token serverToken = postSnapshot.getValue(Token.class);
+
+                    //Create raw payload to send
+                    Notification notification = new Notification("Veggie", "You Have new order" + order_number);
+                    Sender content = new Sender(serverToken.getToken(), notification);
+
+                    mService.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+
+                                    // Only run when get result
+                                    if (response.code() == 200) {
+                                        if (response.body().success == 1)
+                                            Toast.makeText(getApplicationContext(), "Order Placed", Toast.LENGTH_LONG).show();
+                                        else
+                                            Toast.makeText(getApplicationContext(), "Order Failed !!!", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Log.e("ERROR", t.getMessage());
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

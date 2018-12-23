@@ -37,7 +37,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:id="@+id/toolbar"
-                app:title="Food Name"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_collapseMode="parallax"/>
 
@@ -54,6 +53,18 @@
         android:elevation="6dp"
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom|right|end"
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_rating"
+        android:src="@drawable/ic_star"
+        android:tint="@android:color/white"
+        android:elevation="6dp"
+        app:layout_anchor="@id/appBarLayout"
+        app:layout_anchorGravity="bottom|right|start"
         app:pressedTranslationZ="12dp"
         app:useCompatPadding="true"/>
 
@@ -84,18 +95,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/foodItemNameText"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="20dp"
                         android:padding="12dp"
-                        android:text="Food Name"
+                        android:text="@string/food_name"
                         android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold"/>
 
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:id="@+id/foodItemPrice">
 
                         <TextView
@@ -103,14 +113,26 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/foodItempPriceText"
                             android:layout_marginTop="5dp"
-                            android:padding="12dp"
-                            android:text="RS 1000/-"
-                            android:layout_weight="9"
+                            android:paddingStart="12dp"
+                            android:text="@string/price_rs_1000"
                             android:textColor="@color/colorPrimary"
                             android:textSize="18sp"
                             android:textStyle="bold"/>
 
-                    </LinearLayout>
+                        <TextView
+                            android:layout_below="@+id/foodItempPriceText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/foodItempDiscountText"
+                            android:paddingStart="12dp"
+                            android:paddingBottom="12dp"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/discount_10"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+
+                    </RelativeLayout>
 
                     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                         android:layout_width="100dp"
@@ -119,7 +141,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginBottom="5dp"
-                        app:textSize="8sp"
+                        app:textSize="12sp"
                         app:backGroundColor="@color/colorAccent"
                         app:initialNumber="1"/>
 
@@ -133,16 +155,31 @@
                 android:elevation="5dp"
                 app:cardUseCompatPadding="true">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/foodItemDescription"
-                    android:layout_marginTop="6dp"
-                    android:lineSpacingMultiplier="1.5"
-                    android:padding="12dp"
-                    android:text="Description"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        android:rating="0"
+                        android:max="5"
+                        android:isIndicator="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:progressTint="@color/colorPrimary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/foodItemDescription"
+                        android:layout_marginTop="6dp"
+                        android:lineSpacingMultiplier="1.5"
+                        android:padding="12dp"
+                        android:text="@string/description"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"/>
+                </LinearLayout>
 
             </android.support.v7.widget.CardView>
         </LinearLayout>

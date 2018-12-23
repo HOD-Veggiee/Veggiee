@@ -1,6 +1,8 @@
 package com.veggiee.veggiee;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,13 +22,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.veggiee.veggiee.Common.Common;
 import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.Model.Food;
 import com.veggiee.veggiee.Utility.SquareImage;
@@ -44,6 +52,13 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
     //categoryId
     String categoryId=null;
 
+
+    TextView emptyFoodText, username;
+    ProgressBar mProgressBar;
+
+    NavigationView navigationView;
+    String name=null;
+
     FirebaseRecyclerAdapter<Food,ViewHolder_Item> adapter;
 
     @Override
@@ -51,7 +66,7 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Items");
+        toolbar.setTitle(getIntent().getStringExtra("subCategoryName").toUpperCase());
         setSupportActionBar(toolbar);
 
 
@@ -63,23 +78,31 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
 
 
         //init views
+        emptyFoodText = (TextView) findViewById(R.id.emptyFoodText);
+        username=findViewById(R.id.userName);
         mRecyclerView=(RecyclerView) findViewById(R.id.FoodListRecyclerView);
-       mLayoutManager=new LinearLayoutManager(this);
+        mLayoutManager=new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
       /* mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));*/
 
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerView=navigationView.getHeaderView(0);
+        username=(TextView) headerView.findViewById(R.id.userName);
 
         //getting category id from category screen
         if(getIntent()!=null)
         {
-            categoryId=getIntent().getStringExtra("CategoryId");
+            categoryId=getIntent().getStringExtra("subCategoryId");
 
         }
 
-
         if(!categoryId.isEmpty())
         {
-            loadFoodList(categoryId);
+            if(Common.isConnectedToInternet(getBaseContext()))
+                loadFoodList(categoryId);
+            else
+                Toast.makeText(FoodListActivity.this, "Please Check your Internet Connection", Toast.LENGTH_LONG).show();
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewCartFAB);
@@ -92,11 +115,23 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
-//        toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        name=getNameFromSharedPref();
+        username.setText(name);
+    }
+
+    private String getNameFromSharedPref()
+    {
+        SharedPreferences pref=getSharedPreferences("NUM_Info",Context.MODE_PRIVATE);
+        String name=pref.getString("name","");
+        //Toast.makeText(getApplicationContext(),number,Toast.LENGTH_SHORT).show();
+
+        return name;
     }
 
     private void loadFoodList(String categoryId) {
@@ -118,6 +153,8 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder_Item holder, int position, @NonNull final Food model) {
                 holder.foodName.setText(model.getName());
+                holder.foodPrice.setText(model.getPrice());
+ //               holder.ratingBar.setRating(Float.parseFloat(model.getRating)); Needs to change Food model to get Average rating from Rating model
                 Picasso.get().load(model.getImage()).into(holder.foodImage);
 
                 Log.i("obj","\nimg: "+model.getImage()+"\nname: "+model.getName());
@@ -127,8 +164,6 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-
-                        Toast.makeText(getApplicationContext(),""+clickItem.getDescription(),Toast.LENGTH_SHORT).show();
 
                         //get food item id and send it to food detail activity to get food detail of specific food
                         Intent foodListIntent=new Intent(FoodListActivity.this,FoodDetailActivity.class);
@@ -140,6 +175,19 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
         };
 
         mRecyclerView.setAdapter(adapter);
+
+        food.orderByChild("menuId").equalTo(categoryId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren())
+                    emptyFoodText.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -207,6 +255,8 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
 
         public SquareImage foodImage;
         public TextView foodName;
+        public TextView foodPrice;
+        public RatingBar ratingBar;
 
         public void setItemClickListener(ItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;
@@ -219,6 +269,8 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
 
             foodImage= (SquareImage) itemView.findViewById(R.id.foodImage);
             foodName=(TextView) itemView.findViewById(R.id.foodName);
+            foodPrice=(TextView) itemView.findViewById(R.id.foodPrice);
+            ratingBar=(RatingBar) itemView.findViewById(R.id.ratingBar);
             itemView.setOnClickListener(this);
         }
 

@@ -12,7 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AuthenticationActivity"/>
+        <service android:name=".Service.MyFirebaseIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".Service.MyFirebaseMessaging">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".AuthenticationActivity" />
         <activity android:name=".CategoryActivity" />
         <activity android:name=".CompleteProfileActivity" />
         <activity android:name=".FoodListActivity" />
@@ -26,11 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".Service.ListenOrder"
-            android:enabled="true"
-            android:exported="true"></service>
+        <activity android:name=".SubCategoryActivity"/>
     </application>
 
 </manifest>

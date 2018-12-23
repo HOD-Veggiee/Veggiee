@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,12 +23,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.veggiee.veggiee.Model.Token;
 import com.veggiee.veggiee.Utility.SquareImage;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -56,7 +58,7 @@ public class CategoryActivity extends AppCompatActivity
     FirebaseDatabase mDatabase;
     DatabaseReference category,user;
 
-    TextView username;
+    TextView username, emptyCategoryText;
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
     String phoneNumber=null,name=null;
@@ -73,6 +75,10 @@ public class CategoryActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!Common.isConnectedToInternet(this))
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+
+
         //if user is not signed in, sent back to login screen
         if(FirebaseAuth.getInstance().getCurrentUser()==null)
         {
@@ -88,6 +94,7 @@ public class CategoryActivity extends AppCompatActivity
 
 
         //init views
+        emptyCategoryText = (TextView) findViewById(R.id.emptyCategoryText);
         username=findViewById(R.id.userName);
         mRecyclerView=(RecyclerView) findViewById(R.id.categoriesRecyclerView);
         //mLayoutManager=new LinearLayoutManager(this);
@@ -155,6 +162,15 @@ public class CategoryActivity extends AppCompatActivity
 
         loadCategoriesData();
 
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(CategoryActivity.this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String token = instanceIdResult.getToken();
+                updateToken(token);
+                Log.i("ttokennn", token);
+            }
+        });
+
         /*adapter.notifyDataSetChanged();*/
 
 
@@ -182,6 +198,13 @@ public class CategoryActivity extends AppCompatActivity
             floater_images(image);
         }
 
+    }
+
+    private void updateToken(String token) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token, false); // False bcz sending from client app
+        tokens.child(getPhoneNumberFromSharedPref()).setValue(data);
     }
 
 
@@ -245,8 +268,6 @@ public class CategoryActivity extends AppCompatActivity
     }
 
 
-
-
     private String getPhoneNumberFromSharedPref() {
 
         SharedPreferences pref=getSharedPreferences("NUM_Info",Context.MODE_PRIVATE);
@@ -295,27 +316,43 @@ public class CategoryActivity extends AppCompatActivity
                     public void onClick(View view, int position, boolean isLongClick) {
 
                         //get category id and send it to foodlist activity to get foodlist of specific category
-                        Intent foodListIntent=new Intent(CategoryActivity.this,FoodListActivity.class);
-                        foodListIntent.putExtra("CategoryId",adapter.getRef(position).getKey());
-                        startActivity(foodListIntent);
+                        Intent subCategoryIntent=new Intent(CategoryActivity.this,SubCategoryActivity.class);
+                        subCategoryIntent.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        subCategoryIntent.putExtra("categoryName",adapter.getItem(position).getName());
+                        startActivity(subCategoryIntent);
                     }
                 });
             }
         };
 
         mRecyclerView.setAdapter(adapter);
+
+        category.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren())
+                    emptyCategoryText.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+        if (Common.isConnectedToInternet(getBaseContext()))
+            adapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+        if (Common.isConnectedToInternet(getBaseContext()))
+            adapter.stopListening();
     }
 
     @Override

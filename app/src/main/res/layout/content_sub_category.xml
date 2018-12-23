@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".FoodListActivity"
-    tools:showIn="@layout/app_bar_food_list">
+    tools:context=".SubCategoryActivity"
+    tools:showIn="@layout/app_bar_sub_category">
 
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/FoodListRecyclerView"
+        android:id="@+id/SubCategoryListRecyclerView"
         android:scrollbars="vertical"
         android:visibility="visible">
 
@@ -26,6 +26,7 @@
         android:text="@string/emptyViewText"
         android:textSize="20sp"
         android:drawableStart="@drawable/ic_shopping_cart"
-        android:id="@+id/emptyFoodText"/>
+        android:id="@+id/emptySubCategoryText"
+        android:visibility="visible"/>
 
 </RelativeLayout>

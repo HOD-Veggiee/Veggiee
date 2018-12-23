@@ -4,9 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="4dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginEnd="5dp"
-    android:layout_marginTop="5dp">
+    android:layout_margin="5dp"
+    app:cardCornerRadius="10dp">
 
 
     <RelativeLayout
@@ -24,13 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/categoryName"
-            android:text="Fast Food"
-            android:textSize="17dp"
-            android:layout_below="@+id/categoryImage"
-            android:gravity="center"
+            android:text="@string/fast_food"
+            android:textSize="12sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:background="@android:color/white"/>
+            android:layout_below="@+id/categoryImage"
+            android:gravity="center"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

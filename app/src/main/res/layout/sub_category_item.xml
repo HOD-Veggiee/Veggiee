@@ -56,7 +56,6 @@ android:layout_marginTop="5dp">
                 android:progressTint="@color/colorPrimary"/>
         </RelativeLayout>
     </LinearLayout>
-
 </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -15,20 +15,19 @@
         android:contentDescription="@string/background_image"
         android:scaleType="fitStart"/>
 
-    <ViewFlipper
+    <com.daimajia.slider.library.SliderLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/v_flipper"
         android:animateFirstView="true"
-        android:backgroundTint="@color/colorPrimary">
-
-    </ViewFlipper>
+        android:backgroundTint="@color/colorPrimary"
+        android:id="@+id/slider">
+    </com.daimajia.slider.library.SliderLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/v_flipper"
+        android:layout_below="@+id/slider"
         android:layout_width="match_parent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"

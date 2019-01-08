@@ -155,7 +155,8 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
                 holder.foodName.setText(model.getName());
                 holder.foodPrice.setText(model.getPrice());
  //               holder.ratingBar.setRating(Float.parseFloat(model.getRating)); Needs to change Food model to get Average rating from Rating model
-                Picasso.get().load(model.getImage()).into(holder.foodImage);
+                //Picasso.get().load(model.getImage()).into(holder.foodImage); // For latest version of Picasso (implementation 'com.squareup.picasso:picasso:2.71828')
+                Picasso.with(getBaseContext()).load(model.getImage()).into(holder.foodImage); // Bcz slider support lower version of Picasso, so downgraded to (implementation 'com.squareup.picasso:picasso:2.5.2')
 
                 Log.i("obj","\nimg: "+model.getImage()+"\nname: "+model.getName());
 
@@ -231,18 +232,34 @@ public class FoodListActivity extends AppCompatActivity implements NavigationVie
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Intent orderStatusIntent=new Intent(FoodListActivity.this,OrderStatusActivity.class);
+        Intent plannerIntent=new Intent(FoodListActivity.this,PlannerActivity.class);
+
         switch (id)
         {
+            case R.id.orderStatus:
+                startActivity(orderStatusIntent);
+                break;
+
+            case R.id.orderHistory:
+                orderStatusIntent.putExtra("order_status", "completed");
+                startActivity(orderStatusIntent);
+                break;
+
+            case R.id.subscribedPlanners:
+                startActivity(plannerIntent);
+                break;
+
+            case R.id.unSubscribedPlanners:
+                plannerIntent.putExtra("planner_status", "unsubscribed");
+                startActivity(plannerIntent);
+                break;
+
             case R.id.logout:
                 Intent loginIntent=new Intent(FoodListActivity.this,AuthenticationActivity.class);
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(loginIntent);
                 finish();
-                break;
-
-            case R.id.orderStatus:
-                Intent orderStatusIntent=new Intent(FoodListActivity.this,OrderStatusActivity.class);
-                startActivity(orderStatusIntent);
                 break;
         }
 

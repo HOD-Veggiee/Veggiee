@@ -145,7 +145,8 @@ public class SubCategoryActivity extends AppCompatActivity implements Navigation
             @Override
             protected void onBindViewHolder(@NonNull SubCategoryViewHolder holder, int position, @NonNull final SubCategory model) {
                 holder.sub_category_name.setText(model.getName());
-                Picasso.get().load(model.getImage()).into(holder.sub_category_image);
+                //Picasso.get().load(model.getImage()).into(holder.sub_category_image); // For latest version of Picasso (implementation 'com.squareup.picasso:picasso:2.71828')
+                Picasso.with(getBaseContext()).load(model.getImage()).into(holder.sub_category_image); // Bcz slider support lower version of Picasso, so downgraded to (implementation 'com.squareup.picasso:picasso:2.5.2')
 
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
@@ -226,18 +227,34 @@ public class SubCategoryActivity extends AppCompatActivity implements Navigation
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Intent orderStatusIntent=new Intent(SubCategoryActivity.this,OrderStatusActivity.class);
+        Intent plannerIntent=new Intent(SubCategoryActivity.this,PlannerActivity.class);
+
         switch (id)
         {
+            case R.id.orderStatus:
+                startActivity(orderStatusIntent);
+                break;
+
+            case R.id.orderHistory:
+                orderStatusIntent.putExtra("order_status", "completed");
+                startActivity(orderStatusIntent);
+                break;
+
+            case R.id.subscribedPlanners:
+                startActivity(plannerIntent);
+                break;
+
+            case R.id.unSubscribedPlanners:
+                plannerIntent.putExtra("planner_status", "unsubscribed");
+                startActivity(plannerIntent);
+                break;
+
             case R.id.logout:
                 Intent loginIntent=new Intent(SubCategoryActivity.this,AuthenticationActivity.class);
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(loginIntent);
                 finish();
-                break;
-
-            case R.id.orderStatus:
-                Intent orderStatusIntent=new Intent(SubCategoryActivity.this,OrderStatusActivity.class);
-                startActivity(orderStatusIntent);
                 break;
         }
 

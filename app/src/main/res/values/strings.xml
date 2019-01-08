@@ -40,4 +40,6 @@
     <string name="price_rs_1000">Price: Rs 1000/-</string>
     <string name="discount_10">Discount: 10%</string>
     <string name="description">Description</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="order_history">Orders History</string>
 </resources>

@@ -6,9 +6,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/orderStatus"
-            android:icon="@drawable/ic_orders"
+            android:icon="@drawable/ic_receipt_black_24dp"
             android:title="@string/order_status" />
-
+        <item
+            android:id="@+id/orderHistory"
+            android:icon="@drawable/ic_orders"
+            android:title="@string/order_history" />
+        <item
+            android:id="@+id/subscribedPlanners"
+            android:icon="@drawable/ic_event_available_black_24dp"
+            android:title="Subscribed Planners" />
+        <item
+            android:id="@+id/unSubscribedPlanners"
+            android:icon="@drawable/ic_event_busy_black_24dp"
+            android:title="Unsubscribed Planners" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout"

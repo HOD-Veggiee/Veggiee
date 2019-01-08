@@ -10,6 +10,9 @@ import com.veggiee.veggiee.Remote.RetrofitClient;
 
 public class Common {
 
+    public static final String UPDATE = "Update";
+    public static final String SUBSCRIBE_UNSUBSCRIBE = "Subscribe/Unsubscribe";
+    public static final String DELETE = "Delete";
     public static User currentUser;
     public static String PHONE_TEXT = "userPhone";
 
@@ -25,16 +28,37 @@ public class Common {
         switch (code)
         {
             case "0":
-                return "Order placed.";
+                return "Pending";
 
             case "1":
-                return "In Process.";
+                return "Preparing";
 
             case "2":
-                return "On way.";
+                return "On it's way";
+
+            case "3":
+                return "Completed";
 
             default:
-                return "In Process";
+                return "Pending";
+        }
+    }
+
+    public static String convertCodeToDeliveryTime(int code)
+    {
+        switch (code)
+        {
+            case 1:
+                return "09AM - 01PM";
+
+            case 2:
+                return "01PM - 05PM";
+
+            case 3:
+                return "05PM - 09PM";
+
+            default:
+                return "09AM - 01PM";
         }
     }
 

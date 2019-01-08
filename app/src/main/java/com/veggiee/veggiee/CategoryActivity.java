@@ -28,9 +28,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.veggiee.veggiee.Model.Banner;
 import com.veggiee.veggiee.Model.Token;
 import com.veggiee.veggiee.Utility.SquareImage;
 
@@ -48,6 +54,7 @@ import com.veggiee.veggiee.Interface.ItemClickListener;
 import com.veggiee.veggiee.Model.Category;
 import com.veggiee.veggiee.Model.User;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 
@@ -56,7 +63,7 @@ public class CategoryActivity extends AppCompatActivity
 
 
     FirebaseDatabase mDatabase;
-    DatabaseReference category,user;
+    DatabaseReference category,user, Banners;
 
     TextView username, emptyCategoryText;
     RecyclerView mRecyclerView;
@@ -69,7 +76,8 @@ public class CategoryActivity extends AppCompatActivity
 
     NavigationView navigationView;
 
-    ViewFlipper v_flipper;
+    HashMap<String, String> image_list;
+    SliderLayout mSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +120,7 @@ public class CategoryActivity extends AppCompatActivity
         mDatabase=FirebaseDatabase.getInstance();
         category=mDatabase.getReference("Category");
         user=mDatabase.getReference("User");
+        Banners = mDatabase.getReference("Banner");
 
         //getting phone number from shared preference to load user information from firebase
         phoneNumber=getPhoneNumberFromSharedPref();
@@ -190,14 +199,46 @@ public class CategoryActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        int images[] = {R.drawable.slider1, R.drawable.slider2, R.drawable.slider3};
-        v_flipper = findViewById(R.id.v_flipper);
+        // Setup Slider
+        setupSlider();
+    }
 
-        for (int image: images)
-        {
-            floater_images(image);
-        }
+    private void setupSlider() {
+        mSlider =findViewById(R.id.slider);
 
+        image_list = new HashMap<>();
+
+        Banners.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot:dataSnapshot .getChildren())
+                {
+                    Banner banner = postSnapshot.getValue(Banner.class);
+                    image_list.put(banner.getName(), banner.getImage());
+                }
+
+                for (String key:image_list.keySet())
+                {
+                    // Create Slider
+                    DefaultSliderView defaultSliderView = new DefaultSliderView(getBaseContext());
+                    defaultSliderView
+                            .image(image_list.get(key))
+                            .setScaleType(BaseSliderView.ScaleType.Fit);
+
+                    mSlider.addSlider(defaultSliderView);
+                    Banners.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mSlider.setPresetTransformer(SliderLayout.Transformer.Stack);
+        mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        mSlider.setDuration(4000);
     }
 
     private void updateToken(String token) {
@@ -205,18 +246,6 @@ public class CategoryActivity extends AppCompatActivity
         DatabaseReference tokens = db.getReference("Tokens");
         Token data = new Token(token, false); // False bcz sending from client app
         tokens.child(getPhoneNumberFromSharedPref()).setValue(data);
-    }
-
-
-    public void floater_images(int image)
-    {
-        ImageView imagevew = new ImageView(this);
-        imagevew.setBackgroundResource(image);
-        v_flipper.addView(imagevew);
-        v_flipper.setFlipInterval(4000);
-        v_flipper.setAutoStart(true);
-        v_flipper.setInAnimation(this, android.R.anim.slide_in_left);
-        v_flipper.setOutAnimation(this, android.R.anim.slide_out_right);
     }
 
     public class BackgroundTasks extends AsyncTask<Void,Void,Void>
@@ -305,7 +334,8 @@ public class CategoryActivity extends AppCompatActivity
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder_CategoryItem holder, int position, @NonNull Category model) {
                 holder.categoryName.setText(model.getName());
-                Picasso.get().load(model.getImage()).into(holder.categoryImage);
+                //Picasso.get().load(model.getImage()).into(holder.categoryImage); // For latest version of Picasso (implementation 'com.squareup.picasso:picasso:2.71828')
+                Picasso.with(getBaseContext()).load(model.getImage()).into(holder.categoryImage); // Bcz slider support lower version of Picasso, so downgraded to (implementation 'com.squareup.picasso:picasso:2.5.2')
 
                 Log.i("obj","\nimg: "+model.getImage()+"\nname: "+model.getName());
 
@@ -353,6 +383,7 @@ public class CategoryActivity extends AppCompatActivity
         super.onStop();
         if (Common.isConnectedToInternet(getBaseContext()))
             adapter.stopListening();
+            mSlider.startAutoCycle();
     }
 
     @Override
@@ -383,18 +414,34 @@ public class CategoryActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Intent orderStatusIntent=new Intent(CategoryActivity.this,OrderStatusActivity.class);
+        Intent plannerIntent=new Intent(CategoryActivity.this,PlannerActivity.class);
+
         switch (id)
         {
+            case R.id.orderStatus:
+                startActivity(orderStatusIntent);
+                break;
+
+            case R.id.orderHistory:
+                orderStatusIntent.putExtra("order_status", "completed");
+                startActivity(orderStatusIntent);
+                break;
+
+            case R.id.subscribedPlanners:
+                startActivity(plannerIntent);
+                break;
+
+            case R.id.unSubscribedPlanners:
+                plannerIntent.putExtra("planner_status", "unsubscribed");
+                startActivity(plannerIntent);
+                break;
+
             case R.id.logout:
                 Intent loginIntent=new Intent(CategoryActivity.this,AuthenticationActivity.class);
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(loginIntent);
                 finish();
-                break;
-
-            case R.id.orderStatus:
-                Intent orderStatusIntent=new Intent(CategoryActivity.this,OrderStatusActivity.class);
-                startActivity(orderStatusIntent);
                 break;
         }
 

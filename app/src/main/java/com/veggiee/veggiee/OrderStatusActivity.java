@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.veggiee.veggiee.Common.Common;
 import com.veggiee.veggiee.Interface.ItemClickListener;
@@ -86,9 +87,13 @@ public class OrderStatusActivity extends AppCompatActivity {
 
     private void loadOrders(String phoneNumber) {
 
-        FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()
-                .setQuery(requests.orderByChild("phone").equalTo(phoneNumber),Request.class).build();
+        Query query = requests.orderByChild("phone_status").equalTo(phoneNumber + "_incomplete");
 
+        if(getIntent().getStringExtra("order_status") != null)
+            query = requests.orderByChild("phone_status").equalTo(phoneNumber + "_" + getIntent().getStringExtra("order_status"));
+
+        FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()
+                .setQuery(query,Request.class).build();
 
         adapter=new FirebaseRecyclerAdapter<Request, ViewHolder_Order>(options) {
             @Override
@@ -108,7 +113,6 @@ public class OrderStatusActivity extends AppCompatActivity {
                                 model.getFoods()
                         )
                 );
-
 
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
@@ -165,7 +169,7 @@ public class OrderStatusActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(adapter);
 
-        requests.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChildren())

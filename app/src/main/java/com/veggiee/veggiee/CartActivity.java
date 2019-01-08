@@ -1,7 +1,10 @@
 package com.veggiee.veggiee;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +14,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -33,8 +40,12 @@ import com.veggiee.veggiee.Model.Token;
 import com.veggiee.veggiee.Remote.APIService;
 import com.veggiee.veggiee.ViewHolder.CartAdapter;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,8 +90,7 @@ public class CartActivity extends AppCompatActivity {
         emptyCartText=(TextView) findViewById(R.id.emptyCartText);
 
         //totalPriceText=(TextView) findViewById(R.id.totalAmount);
-        placeOrderButton=(AppCompatButton) findViewById(R.id.placeOrderButton);
-
+        placeOrderButton =(AppCompatButton) findViewById(R.id.placeOrderButton);
 
         //init firebase
         mDatabase=FirebaseDatabase.getInstance();
@@ -96,7 +106,6 @@ public class CartActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         loadCartItems();
 

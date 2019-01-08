@@ -8,6 +8,7 @@ public class Request {
     private String Total;
     private List<Order> foods;
     private String status;
+    private String phone_status;
 
     public Request() {
     }
@@ -17,7 +18,8 @@ public class Request {
         Address = address;
         Total = total;
         this.foods = foods;
-        this.status="0";    //0=Placed, 1=In Process, 2=On way
+        this.status="0";    //0=Pending, 1=Preparing, 2=On its way, 3=Completed
+        this.phone_status = phone + "_incomplete";
     }
 
     public String getStatus() {
@@ -59,4 +61,8 @@ public class Request {
     public void setFoods(List<Order> foods) {
         this.foods = foods;
     }
+
+    public String getPhone_status() { return phone_status; }
+
+    public void setPhone_status(String phone_status) { this.phone_status = phone_status; }
 }

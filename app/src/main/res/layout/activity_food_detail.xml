@@ -47,24 +47,36 @@
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/addToCartButton"
-        android:src="@drawable/ic_shopping_cart"
-        android:tint="@android:color/white"
-        android:elevation="6dp"
-        app:layout_anchor="@id/appBarLayout"
-        app:layout_anchorGravity="bottom|right|end"
-        app:pressedTranslationZ="12dp"
-        app:useCompatPadding="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/btn_rating"
         android:src="@drawable/ic_star"
         android:tint="@android:color/white"
         android:elevation="6dp"
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom|right|start"
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addToPlannerButton"
+        android:src="@drawable/ic_event_white_24dp"
+        android:tint="@android:color/white"
+        android:elevation="6dp"
+        app:layout_anchor="@id/appBarLayout"
+        app:layout_anchorGravity="bottom|center"
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addToCartButton"
+        android:src="@drawable/ic_shopping_cart"
+        android:tint="@android:color/white"
+        android:elevation="6dp"
+        app:layout_anchor="@id/appBarLayout"
+        app:layout_anchorGravity="bottom|right|end"
         app:pressedTranslationZ="12dp"
         app:useCompatPadding="true"/>
 
@@ -136,12 +148,12 @@
 
                     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                         android:layout_width="100dp"
-                        android:layout_height="30dp"
+                        android:layout_height="35dp"
                         android:id="@+id/quantityButton"
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginBottom="5dp"
-                        app:textSize="12sp"
+                        app:textSize="10sp"
                         app:backGroundColor="@color/colorAccent"
                         app:initialNumber="1"/>
 

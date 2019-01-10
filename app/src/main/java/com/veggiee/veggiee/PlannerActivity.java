@@ -242,7 +242,7 @@ public class PlannerActivity extends AppCompatActivity {
         weeklyBillTxt = add_planner_layout.findViewById(R.id.weeklyBillTxt);
         weeklyBillTxt.setText("Bill/Week: " + item.getTotalWeeklyBill() + " Rs.");
         foodNameTxtView = add_planner_layout.findViewById(R.id.foodNameTxtView);
-        foodNameTxtView.setText("(" + item.getFoodName() + ")");
+        foodNameTxtView.setText("(" + item.getFoodName().toUpperCase() + ")");
         startDatePickerBtn = add_planner_layout.findViewById(R.id.startDatePicker);
         startDatePickerBtn.setText(item.getStartDate());
         deliveryTimeSpinner = add_planner_layout.findViewById(R.id.deliveryTimeSpinner);

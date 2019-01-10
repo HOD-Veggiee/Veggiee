@@ -62,7 +62,7 @@ import retrofit2.Response;
 
 public class FoodDetailActivity extends AppCompatActivity implements RatingDialogListener {
 
-    TextView foodIItemName,foodItemPrice,foodItemDescription,foodItemDiscount,itemPriceTxt,weeklyBillTxt;
+    TextView foodIItemName,foodItemPrice,foodItemDescription,foodItemDiscount,itemPriceTxt,weeklyBillTxt, foodNameTxtView;
     ImageView foodItemImage;
     CollapsingToolbarLayout collapsingToolbarLayout;
     FloatingActionButton addToCartButton, btnRating, addToPlannerButton;
@@ -174,6 +174,8 @@ public class FoodDetailActivity extends AppCompatActivity implements RatingDialo
         itemPriceTxt = (TextView) add_planner_layout.findViewById(R.id.itemPriceTxt);
         itemPriceTxt.setText("Price: " + itemPrice + " Rs.");
         weeklyBillTxt = (TextView) add_planner_layout.findViewById(R.id.weeklyBillTxt);
+        foodNameTxtView = add_planner_layout.findViewById(R.id.foodNameTxtView);
+        foodNameTxtView.setText("(" + currentFood.getName().toUpperCase() + ")");
         startDatePickerBtn = (AppCompatButton) add_planner_layout.findViewById(R.id.startDatePicker);
         deliveryTimeSpinner = add_planner_layout.findViewById(R.id.deliveryTimeSpinner);
         deliveryTimeSpinner.setItems("Select Delivery Time Slot", "09AM - 01PM ", "01PM - 05PM", "05PM - 09PM");

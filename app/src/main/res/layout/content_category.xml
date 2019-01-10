@@ -9,15 +9,15 @@
     tools:showIn="@layout/app_bar_category">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/back"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@drawable/back"
         android:contentDescription="@string/background_image"
         android:scaleType="fitStart"/>
 
     <com.daimajia.slider.library.SliderLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_centerHorizontal="true"
